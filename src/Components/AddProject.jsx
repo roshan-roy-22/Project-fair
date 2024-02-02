@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { addProjectAPI } from '../Services/allAPI';
 const defaultImg="https://t4.ftcdn.net/jpg/05/65/22/41/360_F_565224180_QNRiRQkf9Fw0dKRoZGwUknmmfk51SuSS.jpg"
 
 function AddProject() {
@@ -48,8 +49,26 @@ function AddProject() {
       reqBody.append("website",website)
       reqBody.append("projectImage",projectImage)
       //api call -reqHeader
-      const reqHeader ={
-        "Content-Type":"multipart/form-data"
+      const token =sessionStorage.getItem("token")
+      if(token){
+        const reqHeader={
+          "Content-Type":"multipart/form-data",
+          "Authorization":`Bearer ${token}`
+        }
+        //api call
+        try {
+          const result = await addProjectAPI(reqBody,reqHeader)
+          console.log(result);
+          if(result.status===200){
+            console.log(result.data);
+            handleClose()
+          }
+          else{
+            toast.warning(result.response.data)
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   }
