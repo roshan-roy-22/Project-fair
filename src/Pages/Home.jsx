@@ -4,10 +4,21 @@ import { Link, useNavigate } from "react-router-dom";
 import ProjectCard from "../Components/ProjectCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getHomeProjectAPI } from "../Services/allAPI";
 
 function Home() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsloggedIn] = useState(false);
+  const [allProjects,setAllprojects]=useState([]);
+
+  console.log(allProjects);
+
+  const getHomeProject = async ()=>{
+    const result = await getHomeProjectAPI();
+    if(result.status===200) setAllprojects(result.data)
+    else console.log(result);
+  }
+
   const handleProjectPage = () => {
     if(sessionStorage.getItem("token")){
       navigate("/projects");
@@ -17,6 +28,7 @@ function Home() {
   };
 
   useEffect(() => {
+    getHomeProject();
     if (sessionStorage.getItem("token")) {
       setIsloggedIn(true);
     } else {
@@ -71,9 +83,11 @@ function Home() {
         <h2 className="text-center mb-5 mt-2">Explore our projects</h2>
         <marquee>
           <div className="d-flex justify-content-between">
-            <div>
-              <ProjectCard />
+            {allProjects.length>0 ?allProjects.map((project,index)=>(
+              <div key={index}>
+              <ProjectCard project={project} />
             </div>
+            )):null }
           </div>
         </marquee>
         <div className="text-center my-2 ">
