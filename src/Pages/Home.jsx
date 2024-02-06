@@ -82,7 +82,7 @@ function Home() {
       <div className="projects mt-5">
         <h2 className="text-center mb-5 mt-2">Explore our projects</h2>
         <marquee>
-          <div className="d-flex justify-content-between">
+          <div style={{height:'300px'}} className="d-flex justify-content-between">
             {allProjects.length>0 ?allProjects.map((project,index)=>(
               <div key={index}>
               <ProjectCard project={project} />

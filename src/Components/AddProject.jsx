@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addProjectAPI } from '../Services/allAPI';
+import { addProjectResponseContext } from '../Context API/ContextShare';
 const defaultImg="https://t4.ftcdn.net/jpg/05/65/22/41/360_F_565224180_QNRiRQkf9Fw0dKRoZGwUknmmfk51SuSS.jpg"
 
 function AddProject() {
-
+//get context 
+const {addProjectResponse,setAddProjectResponse}=useContext(addProjectResponseContext)
   const [show, setShow] = useState(false);
   const [projectData,setProjectData]=useState({
     title:"",languages:"",overview:"",github:"",website:"",projectImage:""
@@ -62,6 +64,7 @@ function AddProject() {
           if(result.status===200){
             console.log(result.data);
             handleClose()
+            setAddProjectResponse(result.data)
           }
           else{
             toast.warning(result.response.data)
