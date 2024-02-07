@@ -46,7 +46,7 @@ function MyProject() {
             <div key={index} className="border rounded justify-content-between  d-flex align-items-center text-danger mb-3 p-2 ">
               <h5>{project?.title}</h5>
               <div className="d-flex align-items-center   icons">
-                <EditProject />
+                <EditProject project ={project}/>
                 <a href="" target="_blank" className="btn">
                   <i class="fa-brands fa-github fa-2x"></i>
                 </a>
