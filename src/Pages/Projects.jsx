@@ -5,6 +5,7 @@ import ProjectCard from "../Components/ProjectCard";
 import { allProjectAPI } from "../Services/allAPI";
 
 function Projects() {
+  const [searchKey,setSearchKey]=useState("");
   const [allprojects, setAllprojects] = useState([]);
 
   const getAllprojects = async () => {
@@ -15,7 +16,7 @@ function Projects() {
     };
 
     try {
-      const result = await allProjectAPI(reqHeader);
+      const result = await allProjectAPI(searchKey,reqHeader);
       if (result.status === 200) {
         setAllprojects(result.data);
       } else {
@@ -28,7 +29,7 @@ function Projects() {
 
   useEffect(() => {
     getAllprojects();
-  }, []);
+  }, [searchKey]);
 
   return (
     <>
@@ -37,6 +38,7 @@ function Projects() {
         <div className="d-flex justify-content-between  m-5">
           <h1>All projects</h1>
           <input
+          onChange={(e)=>setSearchKey(e.target.value)}
             type="text"
             style={{ width: "300px" }}
             className="rounded p-2  "

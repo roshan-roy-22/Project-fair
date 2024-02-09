@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { SERVER_URL } from "../Services/serverURL";
+import { editProjectAPI } from "../Services/allAPI";
+import { toast } from "react-toastify";
+import { addProjectResponseContext } from "../Context API/ContextShare";
+import { editProjectResponseContext } from "../Context API/ContextShare";
+
 
 function EditProject({ project }) {
   console.log(project);
+  const {editProjectResponse,setEditProjectResponse}=useContext(editProjectResponseContext)
+
   const [projectData, setProjectData] = useState({
     id: project._id,
     title: project.title,
@@ -26,8 +33,8 @@ function EditProject({ project }) {
     }
   }, [projectData.projectImage]);
 
-  const handleUpdate = () => {
-    const { title, languages, overview, github, website } = projectData;
+  const handleUpdate = async () => {
+    const { id, title, languages, overview, github, website } = projectData;
 
     if (!title || !languages || !overview || !github || !website) {
       alert("Plase fill form completely");
@@ -47,19 +54,25 @@ function EditProject({ project }) {
       const token = sessionStorage.getItem("token");
       console.log(token);
       if (token) {
-        if (preview) {
-          const reqHeader = {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          };
-          //api call
-        } else {
-          const reqHeader = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          };
-          //api call
+        const reqHeader = {
+          "Content-Type": preview ? "multipart/form-data" : "application/json",
+          "Authorization": `Bearer ${token}`,
+        };
+        //api call
+        try {
+          const result = await editProjectAPI(id, reqBody, reqHeader);
+          console.log(result);
+          if (result.status === 200) {
+            setEditProjectResponse(result.data)
+            handleClose();
+          } else {
+            toast.warning(result.response.data);
+          }
+        } catch (error) {
+          console.log(error);
         }
+
+        //api call
       }
     }
   };
@@ -189,7 +202,9 @@ function EditProject({ project }) {
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary">Update</Button>
+          <Button onClick={handleUpdate} variant="primary">
+            Update
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

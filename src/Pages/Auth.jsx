@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { loginAPI, registerAPI } from "../Services/allAPI";
 import SyncLoaderr from "../Components/SyncLoader";
+import { tokenAuthenticalContext } from "../Context API/TokenAuth";
 
 function Auth({ insideRegister }) {
+  const{isAuthorised, setIsAuthorised}=useContext(tokenAuthenticalContext)
   const [loading ,setLoading]= useState(false)
   const [userData, setUserdata] = useState({
     username: "",
@@ -59,7 +61,7 @@ function Auth({ insideRegister }) {
             "username", result.data.existingUser.username
           );
           sessionStorage.setItem("token", result.data.token);
-
+            setIsAuthorised(true)
           setTimeout(()=>{
             setLoading(false)
             setUserdata({ email: "", password: "" });

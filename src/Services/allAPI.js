@@ -21,17 +21,29 @@ export const addProjectAPI = async (reqBody, reqHeader) => {
 
 //getHomeProjects
 
-export const getHomeProjectAPI = async ()=>{
-    return await commonAPI("GET",`${SERVER_URL}/home-projects`,"","")
+export const getHomeProjectAPI = async () => {
+    return await commonAPI("GET", `${SERVER_URL}/home-projects`, "", "")
 }
 
 //get ALL projects
 
-export const allProjectAPI= async (reqHeader)=>{
-    return await commonAPI("GET",`${SERVER_URL}/all-projects`,"",reqHeader)
+export const allProjectAPI = async (searchKey, reqHeader) => {
+    return await commonAPI("GET", `${SERVER_URL}/all-projects?search=${searchKey}`
+        , "", reqHeader)
 }
 
 //get User Project
-export const userProjectAPI= async (reqHeader)=>{
-    return await commonAPI("GET",`${SERVER_URL}/user-projects`,"",reqHeader)
+export const userProjectAPI = async (reqHeader) => {
+    return await commonAPI("GET", `${SERVER_URL}/user-projects`, "", reqHeader)
 }
+
+//edit project
+export const editProjectAPI = async (id, reqBody, reqHeader) => {
+    return await commonAPI("PUT", `${SERVER_URL}/project/edit/${id}`, reqBody, reqHeader)
+}
+
+//project/remove
+export const deleteProjectAPI = async (id,reqHeader)=>{
+    return await commonAPI("DELETE",`${SERVER_URL}/project/remove/${id}`,{},reqHeader)
+ }
+
