@@ -8,8 +8,8 @@ import SyncLoaderr from "../Components/SyncLoader";
 import { tokenAuthenticalContext } from "../Context API/TokenAuth";
 
 function Auth({ insideRegister }) {
-  const{isAuthorised, setIsAuthorised}=useContext(tokenAuthenticalContext)
-  const [loading ,setLoading]= useState(false)
+  const { isAuthorised, setIsAuthorised } = useContext(tokenAuthenticalContext);
+  const [loading, setLoading] = useState(false);
   const [userData, setUserdata] = useState({
     username: "",
     email: "",
@@ -18,7 +18,7 @@ function Auth({ insideRegister }) {
   const navigate = useNavigate();
 
   console.log(userData.username, userData.email, userData.password);
-  
+
   const handleRegister = async (e) => {
     e.preventDefault();
     console.log(userData);
@@ -44,38 +44,36 @@ function Auth({ insideRegister }) {
       }
     }
   };
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     const { email, password } = userData;
     if (!email || !password) {
-            setLoading(false)
+      setLoading(false);
       toast.info("Please complete the form");
     } else {
       try {
         const result = await loginAPI({ email, password });
         console.log(result);
         if (result.status === 200) {
-          sessionStorage.setItem(
-            "username", result.data.existingUser.username
-          );
+          sessionStorage.setItem("username", result.data.existingUser.username);
           sessionStorage.setItem("token", result.data.token);
-            setIsAuthorised(true)
-          setTimeout(()=>{
-            setLoading(false)
+          sessionStorage.setItem("userDetails", JSON.stringify(result.data.existingUser));
+          setIsAuthorised(true);
+          setTimeout(() => {
+            setLoading(false);
             setUserdata({ email: "", password: "" });
             navigate("/");
-          },1200)
+          }, 1200);
         } else {
-           setTimeout(() => {
-            setLoading(false)
+          setTimeout(() => {
+            setLoading(false);
             toast.warning(result.response.data);
             setUserdata({ email: "", password: "" });
-           }, 500);
+          }, 500);
         }
       } catch (error) {
-        
         console.log(error);
       }
     }
@@ -184,7 +182,7 @@ function Auth({ insideRegister }) {
         </div>
       </div>
       <ToastContainer autoClose={2000} position="top-center" />
-      {loading && <SyncLoaderr/>}
+      {loading && <SyncLoaderr />}
     </div>
   );
 }
